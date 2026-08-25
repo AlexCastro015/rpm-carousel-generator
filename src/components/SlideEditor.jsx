@@ -24,7 +24,8 @@ import {
   Wrench,
   Zap,
   CheckCircle2,
-  XCircle
+  XCircle,
+  Phone
 } from 'lucide-react';
 import { THEMES } from '../data/themes';
 import { AUTOMOTIVE_IMAGE_PRESETS, rewriteSlideWithAI } from '../utils/aiEngine';
@@ -101,13 +102,14 @@ export default function SlideEditor({
   };
 
   const archetypeOptions = [
-    { id: 'hook', label: 'Portada (Hook)', icon: Flame },
-    { id: 'point', label: 'Diagnóstico', icon: Wrench },
-    { id: 'vs', label: 'Comparativa VS', icon: Activity },
+    { id: 'hook', label: 'Portada (01)', icon: Flame },
+    { id: 'point', label: 'Diagnóstico (02/03)', icon: Wrench },
+    { id: 'kit_vs_partial', label: 'Kit vs Parcial (04)', icon: Activity },
+    { id: 'benefits', label: 'Beneficios (05)', icon: Zap },
+    { id: 'cta', label: 'Cierre WhatsApp (06)', icon: Phone },
     { id: 'stat', label: 'Métrica Stat', icon: Gauge },
     { id: 'checklist', label: 'Checklist Test', icon: ListChecks },
-    { id: 'quote', label: 'Regla de Oro', icon: Quote },
-    { id: 'cta', label: 'Cierre WhatsApp', icon: Zap }
+    { id: 'quote', label: 'Regla de Oro', icon: Quote }
   ];
 
   return (
@@ -182,13 +184,14 @@ export default function SlideEditor({
                 onChange={(e) => handleFieldChange('type', e.target.value)}
                 className="px-2.5 py-1 rounded-lg bg-[#1A1E23] border border-[#2B3036] text-[#F7F7F7] text-xs font-semibold focus:outline-none focus:border-[#FFC400]"
               >
-                <option value="hook">🔥 Portada (Hook)</option>
-                <option value="point">🔧 Diagnóstico / Paso</option>
-                <option value="vs">⚡ Comparativa VS (Antes/Después)</option>
+                <option value="hook">🔥 01. Portada (Hook Oficial)</option>
+                <option value="point">🔧 02/03. Diagnóstico / Falla</option>
+                <option value="kit_vs_partial">⚡ 04. Kit Completo vs Parcial</option>
+                <option value="benefits">🛡️ 05. Beneficios (3 Cápsulas)</option>
+                <option value="cta">📲 06. Cierre WhatsApp Oficial</option>
                 <option value="stat">📊 Métrica / Dato Crítico</option>
                 <option value="checklist">📋 Checklist de Test</option>
                 <option value="quote">💬 Regla de Oro / Consejo</option>
-                <option value="cta">📲 Cierre WhatsApp (CTA)</option>
               </select>
             </div>
 
@@ -255,7 +258,7 @@ export default function SlideEditor({
                   onClick={() => handleRunCopilotAction('to_vs')}
                   className="px-2 py-1 rounded-lg bg-[#15181C] hover:bg-[#FFC400]/15 border border-[#2B3036] hover:border-[#FFC400]/40 text-[10px] font-semibold text-[#AAAAAA] hover:text-[#F7F7F7] truncate"
                 >
-                  ⚡ A Comparativa
+                  ⚡ A Kit vs Parcial
                 </button>
                 <button
                   onClick={() => handleRunCopilotAction('to_checklist')}
@@ -276,20 +279,20 @@ export default function SlideEditor({
             <div className="grid grid-cols-2 gap-2">
               <div>
                 <label className="block text-[10px] font-semibold text-[#AAAAAA] uppercase tracking-wider mb-1">
-                  Eyebrow / Alerta:
+                  Tag Superior:
                 </label>
                 <input
                   type="text"
                   value={activeSlide.eyebrow || ''}
                   onChange={(e) => handleFieldChange('eyebrow', e.target.value)}
-                  placeholder="MECÁNICA VITAL"
+                  placeholder="MECÁNICA VITAL · REPUESTOS RPM"
                   className="w-full px-3 py-1.5 rounded-xl bg-[#1A1E23] border border-[#2B3036] text-[#F7F7F7] text-xs focus:outline-none focus:border-[#FFC400]"
                 />
               </div>
 
               <div>
                 <label className="block text-[10px] font-semibold text-[#AAAAAA] uppercase tracking-wider mb-1">
-                  Badge Superior:
+                  Badge Cabecera:
                 </label>
                 <input
                   type="text"
@@ -301,58 +304,135 @@ export default function SlideEditor({
               </div>
             </div>
 
-            {/* Headline */}
+            {/* Headline & Highlight Word */}
             <div>
               <label className="block text-[10px] font-semibold text-[#AAAAAA] uppercase tracking-wider mb-1">
-                Titular Principal (Barlow Condensed):
+                Titular Principal (usa **texto** para destacar en amarillo):
               </label>
               <textarea
                 rows={2}
                 value={activeSlide.title || ''}
                 onChange={(e) => handleFieldChange('title', e.target.value)}
-                placeholder="TITULAR DE ALTO IMPACTO EN MAYÚSCULAS"
+                placeholder="KIT EMBRAGUE **TIGGO 2**"
                 className="w-full px-3 py-2 rounded-xl bg-[#1A1E23] border border-[#2B3036] text-[#F7F7F7] text-xs font-barlow font-bold uppercase focus:outline-none focus:border-[#FFC400] resize-none"
+              />
+            </div>
+
+            <div>
+              <label className="block text-[10px] font-semibold text-[#FFC400] uppercase tracking-wider mb-1">
+                Palabra / Frase Destacada en Amarillo:
+              </label>
+              <input
+                type="text"
+                value={activeSlide.highlightText || ''}
+                onChange={(e) => handleFieldChange('highlightText', e.target.value)}
+                placeholder="TIGGO 2 / RENDIMIENTO SEGURO"
+                className="w-full px-3 py-1.5 rounded-xl bg-[#1A1E23] border border-[#2B3036] text-[#FFC400] text-xs focus:outline-none focus:border-[#FFC400]"
               />
             </div>
 
             {/* ================= ARCHETYPE SPECIFIC EDITORS ================= */}
 
-            {/* 1. VS COMPARISON FIELDS */}
-            {activeSlide.type === 'vs' && (
+            {/* 1. KIT VS PARCIAL / VS FIELDS */}
+            {(activeSlide.type === 'kit_vs_partial' || activeSlide.type === 'vs') && (
               <div className="space-y-2.5 p-3 rounded-xl bg-[#121418] border border-[#2B3036]">
                 <span className="text-[11px] font-bold text-[#FFC400] uppercase font-barlow tracking-wider block">
-                  Configuración de Comparativa VS:
+                  Tarjetas Comparativas (Kit Completo vs Parcial):
                 </span>
 
-                <div>
-                  <label className="block text-[10px] font-semibold text-red-400 uppercase tracking-wider mb-1 flex items-center gap-1">
-                    <XCircle className="w-3 h-3" /> ❌ Error Común / Pieza Mala:
-                  </label>
-                  <textarea
-                    rows={2}
-                    value={activeSlide.vsWrong || ''}
-                    onChange={(e) => handleFieldChange('vsWrong', e.target.value)}
-                    placeholder="Instalar pastillas sobre discos rayados o piezas usadas..."
-                    className="w-full px-3 py-1.5 rounded-xl bg-[#1A1E23] border border-red-500/30 text-[#F7F7F7] text-xs focus:outline-none focus:border-red-400 resize-none"
-                  />
-                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  {/* Left Column: Partial */}
+                  <div className="space-y-1.5 p-2 rounded-lg border border-red-500/30 bg-red-950/10">
+                    <label className="block text-[10px] font-semibold text-red-400 uppercase tracking-wider">
+                      🔴 Título Tarjeta Roja:
+                    </label>
+                    <input
+                      type="text"
+                      value={activeSlide.partialTitle || ''}
+                      onChange={(e) => handleFieldChange('partialTitle', e.target.value)}
+                      placeholder="CAMBIO PARCIAL"
+                      className="w-full px-2 py-1 rounded bg-[#1A1E23] border border-red-500/30 text-xs text-white"
+                    />
+                    <input
+                      type="text"
+                      value={activeSlide.partialPoint1 || ''}
+                      onChange={(e) => handleFieldChange('partialPoint1', e.target.value)}
+                      placeholder="• Más desgaste"
+                      className="w-full px-2 py-1 rounded bg-[#1A1E23] border border-red-500/30 text-xs text-white"
+                    />
+                    <input
+                      type="text"
+                      value={activeSlide.partialPoint2 || ''}
+                      onChange={(e) => handleFieldChange('partialPoint2', e.target.value)}
+                      placeholder="• Vida útil reducida"
+                      className="w-full px-2 py-1 rounded bg-[#1A1E23] border border-red-500/30 text-xs text-white"
+                    />
+                  </div>
 
-                <div>
-                  <label className="block text-[10px] font-semibold text-emerald-400 uppercase tracking-wider mb-1 flex items-center gap-1">
-                    <CheckCircle2 className="w-3 h-3" /> ✅ Solución Repuestos RPM:
-                  </label>
-                  <textarea
-                    rows={2}
-                    value={activeSlide.vsRight || ''}
-                    onChange={(e) => handleFieldChange('vsRight', e.target.value)}
-                    placeholder="Instalar repuestos 100% nuevos garantizados con tolerancia de fábrica..."
-                    className="w-full px-3 py-1.5 rounded-xl bg-[#1A1E23] border border-emerald-500/30 text-[#F7F7F7] text-xs focus:outline-none focus:border-emerald-400 resize-none"
+                  {/* Right Column: Complete */}
+                  <div className="space-y-1.5 p-2 rounded-lg border border-emerald-500/30 bg-emerald-950/10">
+                    <label className="block text-[10px] font-semibold text-emerald-400 uppercase tracking-wider">
+                      🟢 Título Tarjeta Verde:
+                    </label>
+                    <input
+                      type="text"
+                      value={activeSlide.completeTitle || ''}
+                      onChange={(e) => handleFieldChange('completeTitle', e.target.value)}
+                      placeholder="KIT COMPLETO"
+                      className="w-full px-2 py-1 rounded bg-[#1A1E23] border border-emerald-500/30 text-xs text-white"
+                    />
+                    <input
+                      type="text"
+                      value={activeSlide.completePoint1 || ''}
+                      onChange={(e) => handleFieldChange('completePoint1', e.target.value)}
+                      placeholder="• Funcionamiento óptimo"
+                      className="w-full px-2 py-1 rounded bg-[#1A1E23] border border-emerald-500/30 text-xs text-white"
+                    />
+                    <input
+                      type="text"
+                      value={activeSlide.completePoint2 || ''}
+                      onChange={(e) => handleFieldChange('completePoint2', e.target.value)}
+                      placeholder="• Mayor durabilidad"
+                      className="w-full px-2 py-1 rounded bg-[#1A1E23] border border-emerald-500/30 text-xs text-white"
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* 2. BENEFITS (3 GOLDEN PILLS) */}
+            {activeSlide.type === 'benefits' && (
+              <div className="space-y-2.5 p-3 rounded-xl bg-[#121418] border border-[#2B3036]">
+                <span className="text-[11px] font-bold text-[#FFC400] uppercase font-barlow tracking-wider block">
+                  3 Cápsulas Doradas de Beneficios:
+                </span>
+                <div className="grid grid-cols-3 gap-1.5">
+                  <input
+                    type="text"
+                    value={activeSlide.benefit1 || ''}
+                    onChange={(e) => handleFieldChange('benefit1', e.target.value)}
+                    placeholder="Más seguridad"
+                    className="px-2 py-1.5 rounded-lg bg-[#1A1E23] border border-[#2B3036] text-xs text-white text-center font-bold"
+                  />
+                  <input
+                    type="text"
+                    value={activeSlide.benefit2 || ''}
+                    onChange={(e) => handleFieldChange('benefit2', e.target.value)}
+                    placeholder="Mejor rendimiento"
+                    className="px-2 py-1.5 rounded-lg bg-[#1A1E23] border border-[#2B3036] text-xs text-white text-center font-bold"
+                  />
+                  <input
+                    type="text"
+                    value={activeSlide.benefit3 || ''}
+                    onChange={(e) => handleFieldChange('benefit3', e.target.value)}
+                    placeholder="Cambios precisos"
+                    className="px-2 py-1.5 rounded-lg bg-[#1A1E23] border border-[#2B3036] text-xs text-white text-center font-bold"
                   />
                 </div>
               </div>
             )}
 
-            {/* 2. STAT METRIC FIELDS */}
+            {/* 3. STAT METRIC FIELDS */}
             {activeSlide.type === 'stat' && (
               <div className="space-y-2.5 p-3 rounded-xl bg-[#121418] border border-[#2B3036]">
                 <span className="text-[11px] font-bold text-[#FFC400] uppercase font-barlow tracking-wider block">

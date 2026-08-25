@@ -79,13 +79,13 @@ const aiGenerated = generateFullRPMCarouselFromAI(
 );
 
 assert(aiGenerated !== null && typeof aiGenerated === 'object', 'Generación de carrusel retorna objeto válido');
-assert(aiGenerated.slides.length >= 6, 'Genera estructura rica de al menos 6 diapositivas (generó ' + aiGenerated.slides.length + ')');
+assert(aiGenerated.slides.length === 6, 'Genera estructura oficial de exactamente 6 diapositivas (generó ' + aiGenerated.slides.length + ')');
 assert(aiGenerated.slides[0].type === 'hook', 'Slide 1 es Portada (hook)');
-assert(aiGenerated.slides.some(s => s.type === 'stat'), 'Incluye arquetipo Métrica (stat) para impacto visual');
-assert(aiGenerated.slides.some(s => s.type === 'vs'), 'Incluye arquetipo Comparativa (vs) con Error vs Solución');
-assert(aiGenerated.slides.some(s => s.type === 'checklist'), 'Incluye arquetipo Checklist de Diagnóstico');
-assert(aiGenerated.slides.some(s => s.type === 'quote'), 'Incluye arquetipo Regla de Oro / Autoridad (quote)');
-assert(aiGenerated.slides[aiGenerated.slides.length - 1].type === 'cta', 'Última diapositiva es Cierre WhatsApp (cta)');
+assert(aiGenerated.slides[1].type === 'point' && aiGenerated.slides[1].stepNumber === '02', 'Slide 2 es Diagnóstico de síntoma (point)');
+assert(aiGenerated.slides[2].type === 'point' && aiGenerated.slides[2].stepNumber === '03', 'Slide 3 es Riesgo / Daño en cadena (point)');
+assert(aiGenerated.slides[3].type === 'kit_vs_partial', 'Slide 4 es Comparativa Kit Completo vs Parcial (kit_vs_partial)');
+assert(aiGenerated.slides[4].type === 'benefits', 'Slide 5 son 3 Cápsulas de Beneficios doradas (benefits)');
+assert(aiGenerated.slides[5].type === 'cta', 'Slide 6 es Cierre WhatsApp Oficial (cta)');
 
 // AI Copilot Mutation Tests
 const baseSlide = { type: 'point', title: 'Frenos gastados', description: 'Revisa las pastillas' };
@@ -109,7 +109,7 @@ console.log('\n🛡️ 4. Testing de Brand Kit & Reglas de Negocio Repuestos RPM
 const ctaSlide = aiGenerated.slides[aiGenerated.slides.length - 1];
 assert(ctaSlide.ctaButtonText.includes('+56 9 7546 7525'), 'CTA incluye el WhatsApp oficial de RPM (+56 9 7546 7525)');
 assert(ctaSlide.locations.includes('Quilpué') && ctaSlide.locations.includes('Viña del Mar'), 'CTA incluye locales físicos de Quilpué y Viña del Mar');
-assert(ctaSlide.badge.includes('100% NUEVOS') || ctaSlide.badge.includes('NUEVOS'), 'Sello de garantía de repuestos 100% nuevos presente');
+assert(ctaSlide.eyebrow.includes('REPUESTOS RPM') || ctaSlide.badge.includes('ALERTA'), 'Header institucional oficial presente');
 
 // Check forbidden terms in templates
 const forbiddenWords = ['usado', 'usados', 'desarme', 'desarmaduria', 'instalacion gratis', 'instalamos'];

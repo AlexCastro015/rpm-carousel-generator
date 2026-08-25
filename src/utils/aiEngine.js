@@ -172,87 +172,105 @@ export function generateFullRPMCarouselFromAI(rawContent, topicTitle = '') {
 
   if (currentPoint) detectedPoints.push(currentPoint);
 
-  // Dynamic Multi-Archetype Slide Flow for Instagram (Visual Rhythm)
+  // Dynamic Multi-Archetype Slide Flow for Instagram (Official 6-Slide Master Pattern)
   const slides = [];
 
-  // 1. Hook / Cover Slide
+  // Slide 1: Hook / Cover Slide
   const hookPrompt = 'cinematic photo of isolated automotive ' + (partType === 'frenos' ? 'performance brake caliper and slotted rotor' : partType === 'embrague' ? 'heavy duty clutch kit' : 'car engine part') + ', dramatic studio rim lighting with RPM yellow glow, dark graphite background';
   slides.push({
     type: 'hook',
     eyebrow: 'MECÁNICA VITAL · REPUESTOS RPM',
-    title: baseTitle.length > 70 ? baseTitle.substring(0, 70) : baseTitle,
+    title: baseTitle.length > 60 ? baseTitle.substring(0, 60) : baseTitle,
     subtitle: 'Aprende a diagnosticarlo a tiempo y cotiza la pieza exacta antes de que cause una pana mayor.',
-    highlightText: 'REPUESTOS RPM',
+    highlightText: partType === 'frenos' ? 'FRENOS' : partType === 'embrague' ? 'EMBRAGUE' : 'MOTOR',
     badge: 'ALERTA TÉCNICA',
     image: defaultImage,
     imagePrompt: hookPrompt,
     imageLayout: 'card-3d',
-    footerNote: 'Desliza para ver la guía completa 👉'
+    footerNote: 'Desliza para ver la guía completa 👈'
   });
 
-  // 2. Stat / Impact Metric Slide
-  const statNum = partType === 'frenos' ? '2 MM' : partType === 'embrague' ? '80.000' : '30.000 KM';
-  const statLabel = partType === 'frenos' ? 'Límite de desgaste crítico en pastillas' : partType === 'embrague' ? 'Kilómetros promedio de vida útil' : 'Intervalo de inspección preventiva';
+  // Slide 2: Diagnostic / Symptoms
   slides.push({
-    type: 'stat',
-    title: 'EL LÍMITE QUE NO DEBES SUPERAR',
-    statNumber: statNum,
-    statLabel,
-    description: 'Conducir con componentes al límite de fricción sobrecalienta los metales y provoca fallas en cadena.',
-    badge: 'DATO TÉCNICO',
-    keyTakeaway: 'Revisa periódicamente el grosor y estado visual de tus piezas.'
+    type: 'point',
+    stepNumber: '02',
+    eyebrow: 'MECÁNICA VITAL · REPUESTOS RPM',
+    title: detectedPoints[0]?.title ? `¿CÓMO SABER SI **${detectedPoints[0].title}**?` : (partType === 'frenos' ? '¿CÓMO SABER SI LAS **PASTILLAS ESTÁN GASTADAS?**' : '¿CÓMO SABER SI EL **REPUESTO ESTÁ FATIGADO?**'),
+    description: detectedPoints[0]?.body || 'El desgaste por fricción reduce la capacidad de respuesta y aumenta el esfuerzo mecánico en todo el sistema.',
+    highlightText: 'ESTÁ GASTADO?',
+    badge: 'ALERTA TÉCNICA',
+    image: AUTOMOTIVE_IMAGE_PRESETS.taller_diagnostico,
+    imagePrompt: 'mechanic inspecting car components in workshop with dramatic lighting',
+    imageLayout: 'card-3d',
+    keyTakeaway: 'Señales claras = hora de revisar.'
   });
 
-  // 3. Comparison VS Slide (Error vs Correct)
+  // Slide 3: Risk / Damage Cascade
   slides.push({
-    type: 'vs',
-    title: 'ERROR COMÚN VS SOLUCIÓN RPM',
-    badge: 'COMPARATIVA',
-    vsWrong: partType === 'frenos'
-      ? 'Instalar pastillas nuevas sobre discos alabeados o rayados por ahorrar tiempo.'
-      : 'Seguir forzando la marcha cuando el embrague patina en subidas.',
-    vsRight: partType === 'frenos'
-      ? 'Instalar pastillas 100% nuevas con discos en tolerancia o rectificados.'
-      : 'Cambiar el kit de embrague completo (disco, prensa y rodamiento) 100% nuevo.',
-    keyTakeaway: 'Un cambio a medias siempre cuesta el doble a mediano plazo.'
+    type: 'point',
+    stepNumber: '03',
+    eyebrow: 'MECÁNICA VITAL · REPUESTOS RPM',
+    title: detectedPoints[1]?.title ? `¿QUÉ PASA SI **NO SE CAMBIA A TIEMPO?**` : '¿QUÉ PASA SI **SE IGNORA EL DESGASTE?**',
+    description: detectedPoints[1]?.body || 'Seguir forzando el vehículo con componentes fatigados daña piezas adyacentes más costosas y triplica el presupuesto.',
+    highlightText: 'NO SE CAMBIA A TIEMPO?',
+    badge: 'ALERTA TÉCNICA',
+    image: AUTOMOTIVE_IMAGE_PRESETS.motor_turbo,
+    imagePrompt: 'car engine transmission assembly closeup in dark studio lighting',
+    imageLayout: 'card-3d',
+    keyTakeaway: 'Una pana evitable que puede dejarte botado en ruta.'
   });
 
-  // 4. Checklist Slide
+  // Slide 4: Kit Completo vs Cambio Parcial (Comparison)
   slides.push({
-    type: 'checklist',
-    title: 'TEST DE DIAGNÓSTICO RÁPIDO',
-    badge: 'CHECKLIST RPM',
-    checklistItems: [
-      '¿Sientes vibraciones extrañas en el volante o pedal?',
-      '¿Escuchas chirridos o ruidos metálicos al accionar?',
-      '¿Notas pérdida de tracción, frenado o respuesta?',
-      '¿El pedal se siente esponjoso o excesivamente duro?'
-    ],
-    keyTakeaway: 'Si cumples 2 o más síntomas, cotiza tu repuesto de inmediato por WhatsApp.'
+    type: 'kit_vs_partial',
+    stepNumber: '04',
+    eyebrow: 'MECÁNICA VITAL · REPUESTOS RPM',
+    title: 'KIT COMPLETO = **RENDIMIENTO SEGURO**',
+    description: 'Cambiar solo una parte del sistema puede generar desgaste prematuro y nuevos costos de mano de obra.',
+    highlightText: 'RENDIMIENTO SEGURO',
+    badge: 'ALERTA TÉCNICA',
+    image: defaultImage,
+    imagePrompt: 'automotive kit components assembly with annotations',
+    imageLayout: 'card-3d',
+    partialTitle: 'CAMBIO PARCIAL',
+    partialPoint1: 'Más desgaste',
+    partialPoint2: 'Vida útil reducida',
+    completeTitle: 'KIT COMPLETO',
+    completePoint1: 'Funcionamiento óptimo',
+    completePoint2: 'Mayor durabilidad'
   });
 
-  // 5. Golden Rule / Authority Quote Slide
+  // Slide 5: Benefits (3 Golden Pills)
   slides.push({
-    type: 'quote',
-    title: 'LA REGLA DE ORO DE LA MECÁNICA',
-    badge: 'CONSEJO DE AUTORIDAD',
-    quoteText: '«Un repuesto 100% nuevo garantiza tolerancias de fábrica, máxima durabilidad y la tranquilidad de tu familia en ruta.»',
-    quoteAuthor: 'Equipo Técnico · Repuestos RPM',
-    keyTakeaway: 'Cotiza siempre con Marca, Modelo, Año y Cilindrada del motor.'
+    type: 'benefits',
+    stepNumber: '05',
+    eyebrow: 'MECÁNICA VITAL · REPUESTOS RPM',
+    title: 'MANTÉN LA **RESPUESTA DE TU VEHÍCULO**',
+    description: 'Instalar repuestos 100% nuevos garantiza tolerancias de fábrica, confort y tranquilidad en ruta.',
+    highlightText: 'RESPUESTA DE TU VEHÍCULO',
+    badge: 'ALERTA TÉCNICA',
+    image: AUTOMOTIVE_IMAGE_PRESETS.auto_estudio,
+    imagePrompt: 'modern car driving smoothly on road at sunset',
+    imageLayout: 'card-3d',
+    benefit1: 'Más seguridad',
+    benefit2: 'Mejor rendimiento',
+    benefit3: 'Cero ruidos',
+    keyTakeaway: 'Revisar a tiempo evita daños mayores en el sistema.'
   });
 
-  // 6. WhatsApp CTA Slide
+  // Slide 6: Final WhatsApp CTA
   slides.push({
     type: 'cta',
-    eyebrow: '¿BUSCAS ESTE REPUESTO PARA TU AUTO?',
-    title: 'COTIZA DIRECTAMENTE POR WHATSAPP',
-    subtitle: 'Envíanos Marca, Modelo, Año y Motor. Revisamos disponibilidad y compatibilidad de inmediato con nuestro equipo técnico.',
+    eyebrow: 'MECÁNICA VITAL · REPUESTOS RPM',
+    title: `¿NECESITAS ESTE **REPUESTO PARA TU AUTO?**`,
+    subtitle: 'COTIZA POR WHATSAPP Y TE ASESORAMOS.',
+    highlightText: 'REPUESTO PARA TU AUTO',
     ctaButtonText: 'COTIZAR POR WHATSAPP (+56 9 7546 7525)',
     locations: '📍 Quilpué: Chorrillos 782 · Viña del Mar: Local 11, Galería San Antonio',
-    badge: 'REPUESTOS 100% NUEVOS',
+    badge: 'ALERTA TÉCNICA',
     image: AUTOMOTIVE_IMAGE_PRESETS.whatsapp_cta,
-    imagePrompt: 'luxury modern car front view in dark studio, yellow headlights, sleek reflections',
-    imageLayout: 'full-bleed'
+    imagePrompt: 'car spare parts in official packaging box studio lighting',
+    imageLayout: 'card-3d'
   });
 
   const caption = '🚗 ' + baseTitle + '\n\n' +

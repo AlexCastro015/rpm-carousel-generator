@@ -96,80 +96,86 @@ export function runCopywriterAgent(trendData, options = {}) {
     }
   }
 
-  // Generate Instagram-First Multi-Archetype Slide Blueprints
+  // Generate Instagram-First Multi-Archetype Slide Blueprints (Official 6-Slide Master Pattern)
   const draftSlides = [];
 
   // Slide 1: Hook / Cover
   draftSlides.push({
     type: 'hook',
     eyebrow: 'MECÁNICA VITAL · REPUESTOS RPM',
-    title: detectedHook.length > 70 ? detectedHook.substring(0, 70) : detectedHook,
+    title: detectedHook.length > 60 ? detectedHook.substring(0, 60) : detectedHook,
     subtitle: 'Aprende a diagnosticarlo a tiempo y cotiza la pieza exacta antes de que cause una pana mayor.',
-    highlightText: 'REPUESTOS RPM',
+    highlightText: systemCategory === 'frenos' ? 'FRENOS' : systemCategory === 'embrague' ? 'EMBRAGUE' : 'MOTOR',
     badge: 'ALERTA TÉCNICA',
-    footerNote: 'Desliza para ver la guía completa 👉'
+    footerNote: 'Desliza para ver la guía completa 👈'
   });
 
-  // Slide 2: Stat / Critical Metric
-  const statNum = systemCategory === 'frenos' ? '2 MM' : systemCategory === 'embrague' ? '80.000' : '30.000 KM';
-  const statLabel = systemCategory === 'frenos' ? 'Límite de desgaste crítico en pastillas' : systemCategory === 'embrague' ? 'Kilómetros promedio de vida útil' : 'Intervalo de inspección preventiva';
+  // Slide 2: Diagnostic / Symptoms
   draftSlides.push({
-    type: 'stat',
-    title: 'EL LÍMITE QUE NO DEBES SUPERAR',
-    statNumber: statNum,
-    statLabel,
-    description: 'Conducir con componentes al límite de fricción sobrecalienta los metales y desgasta piezas costosas.',
-    badge: 'DATO TÉCNICO',
-    keyTakeaway: 'Revisa periódicamente el grosor y estado visual de tus piezas.'
+    type: 'point',
+    stepNumber: '02',
+    eyebrow: 'MECÁNICA VITAL · REPUESTOS RPM',
+    title: detectedPoints[0]?.title ? `¿CÓMO SABER SI **${detectedPoints[0].title}**?` : '¿CÓMO SABER SI EL **REPUESTO ESTÁ GASTADO?**',
+    description: detectedPoints[0]?.body || 'El disco y componentes de fricción se desgastan con el kilometraje, reduciendo la respuesta y seguridad.',
+    highlightText: 'ESTÁ GASTADO?',
+    badge: 'ALERTA TÉCNICA',
+    keyTakeaway: 'Señales claras = hora de revisar.'
   });
 
-  // Slide 3: Comparison VS Slide
+  // Slide 3: Risk / Consequence
   draftSlides.push({
-    type: 'vs',
-    title: 'ERROR COMÚN VS SOLUCIÓN RPM',
-    badge: 'COMPARATIVA',
-    vsWrong: systemCategory === 'frenos'
-      ? 'Instalar pastillas nuevas sobre discos alabeados o rayados.'
-      : 'Seguir forzando el auto cuando el embrague patina en subidas.',
-    vsRight: systemCategory === 'frenos'
-      ? 'Instalar pastillas 100% nuevas con discos en tolerancia o nuevos.'
-      : 'Cambiar el kit de embrague completo (disco, prensa y rodamiento) 100% nuevo.',
-    keyTakeaway: 'Un cambio a medias siempre termina costando el doble.'
+    type: 'point',
+    stepNumber: '03',
+    eyebrow: 'MECÁNICA VITAL · REPUESTOS RPM',
+    title: detectedPoints[1]?.title ? `¿QUÉ PASA SI **NO SE CAMBIA A TIEMPO?**` : '¿QUÉ PASA SI **SE IGNORA EL DESGASTE?**',
+    description: detectedPoints[1]?.body || 'Seguir forzando el vehículo daña componentes adyacentes de alto costo y triplica el presupuesto final.',
+    highlightText: 'NO SE CAMBIA A TIEMPO?',
+    badge: 'ALERTA TÉCNICA',
+    keyTakeaway: 'Una pana evitable que puede dejarte botado en ruta.'
   });
 
-  // Slide 4: Checklist Slide
+  // Slide 4: Kit Completo vs Parcial
   draftSlides.push({
-    type: 'checklist',
-    title: 'TEST DE DIAGNÓSTICO RÁPIDO',
-    badge: 'CHECKLIST RPM',
-    checklistItems: [
-      '¿Sientes vibraciones anormales en el volante o pedal?',
-      '¿Escuchas chirridos o sonidos metálicos al accionar?',
-      '¿Notas pérdida de tracción, frenado o respuesta?',
-      '¿El pedal se siente esponjoso o excesivamente duro?'
-    ],
-    keyTakeaway: 'Si cumples 2 o más síntomas, cotiza tu repuesto de inmediato.'
+    type: 'kit_vs_partial',
+    stepNumber: '04',
+    eyebrow: 'MECÁNICA VITAL · REPUESTOS RPM',
+    title: 'KIT COMPLETO = **RENDIMIENTO SEGURO**',
+    description: 'Cambiar solo una parte del sistema puede generar desgaste prematuro y nuevos costos de mano de obra.',
+    highlightText: 'RENDIMIENTO SEGURO',
+    badge: 'ALERTA TÉCNICA',
+    partialTitle: 'CAMBIO PARCIAL',
+    partialPoint1: 'Más desgaste',
+    partialPoint2: 'Vida útil reducida',
+    completeTitle: 'KIT COMPLETO',
+    completePoint1: 'Funcionamiento óptimo',
+    completePoint2: 'Mayor durabilidad'
   });
 
-  // Slide 5: Authority Quote / Golden Rule
+  // Slide 5: Benefits (3 Golden Pills)
   draftSlides.push({
-    type: 'quote',
-    title: 'LA REGLA DE ORO DE LA MECÁNICA',
-    badge: 'CONSEJO DE AUTORIDAD',
-    quoteText: '«Un repuesto 100% nuevo garantiza tolerancias de fábrica, máxima durabilidad y la tranquilidad de tu familia en ruta.»',
-    quoteAuthor: 'Equipo Técnico · Repuestos RPM',
-    keyTakeaway: 'Cotiza siempre con Marca, Modelo, Año y Cilindrada del motor.'
+    type: 'benefits',
+    stepNumber: '05',
+    eyebrow: 'MECÁNICA VITAL · REPUESTOS RPM',
+    title: 'MANTÉN LA **RESPUESTA DE TU VEHÍCULO**',
+    description: 'Instalar repuestos 100% nuevos garantiza tolerancias de fábrica, confort y tranquilidad en ruta.',
+    highlightText: 'RESPUESTA DE TU VEHÍCULO',
+    badge: 'ALERTA TÉCNICA',
+    benefit1: 'Más seguridad',
+    benefit2: 'Mejor rendimiento',
+    benefit3: 'Cero ruidos',
+    keyTakeaway: 'Revisar a tiempo evita daños mayores en el sistema.'
   });
 
   // Slide 6: Final WhatsApp CTA
   draftSlides.push({
     type: 'cta',
-    eyebrow: '¿BUSCAS ESTE REPUESTO PARA TU AUTO?',
+    eyebrow: 'MECÁNICA VITAL · REPUESTOS RPM',
     title: 'COTIZA DIRECTAMENTE POR WHATSAPP',
     subtitle: 'Envíanos Marca, Modelo, Año y Motor. Revisamos disponibilidad y compatibilidad de inmediato con nuestro equipo técnico.',
+    highlightText: 'COTIZA DIRECTAMENTE',
     ctaButtonText: 'COTIZAR POR WHATSAPP (+56 9 7546 7525)',
     locations: '📍 Quilpué: Chorrillos 782 · Viña del Mar: Local 11, Galería San Antonio',
-    badge: 'REPUESTOS 100% NUEVOS'
+    badge: 'ALERTA TÉCNICA'
   });
 
   return {
